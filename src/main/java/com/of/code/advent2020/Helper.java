@@ -27,5 +27,25 @@ public class Helper {
 		}
 		return list;
 	}
+	
+	public static List<String> generateStringArrayFromFile(String path) {
+		URL resource = Day1_1.class.getResource(path);
+
+		File file = new File(resource.getPath());
+		Scanner scanner;
+		List<String> list = new ArrayList<String>();
+
+		try {
+			scanner = new Scanner(file);
+
+			while (scanner.hasNextLine()) {
+				list.add(scanner.nextLine());
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 }

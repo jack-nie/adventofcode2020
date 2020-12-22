@@ -24,7 +24,7 @@ public class Day1_2 {
 
 		if (list.size() == 3) {
 			if (target == 0) {
-				List<Integer> tempList = new ArrayList<>();
+				List<Integer> tempList = new ArrayList<Integer>();
 				tempList.addAll(list);
 				result.add(tempList);
 			}
