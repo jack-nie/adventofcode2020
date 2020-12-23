@@ -1,32 +1,44 @@
 package com.of.code.advent2020;
 
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Day2_1 {
 	public static void main(String[] args) {
-		List<String> strList = Helper.generateStringArrayFromFile("/day2.txt");
-		int count = 0;
-		for (String item:strList) {
-			String[] strArray = StringUtils.split(item, " :-");
-			for (int i = 0; i < strArray.length; i++) {
-				int small = Integer.parseInt(strArray[0]);
-				int big = Integer.parseInt(strArray[1]);
-				String match = strArray[2];
-				String source = strArray[3];
-				
-				char[] charArray = source.toCharArray();
-				int innerCount = 0;
-				for (int j = 0; j < charArray.length; j++) {
-					if (match.equals(String.valueOf(charArray[j]))) {
-						innerCount++;
-					}
-				}
-				if (innerCount >= small && innerCount <= big) {
-					count++;
-				}
-			}
-		};
-		System.out.println(count);
+	
+		long l = 0;
+		try {
+			l = Files.lines(Paths.get(Day2_1.class.getResource("/day2.txt").toURI())).filter(line -> {
+			    String policy = line.split(":")[0];
+			    int minVal = Integer.valueOf(policy.split("-")[0]);
+			    int maxVal = Integer.valueOf(policy.split("-")[1].split(" ")[0]);
+			    String letterToContain = policy.substring(policy.length() - 1);
+
+			    String password = line.split(":")[1].substring(1);
+			 
+			    
+			    int count = 0;
+			    for(int i=0; i < password.length(); i++) {
+			        if (password.charAt(i) == letterToContain.charAt(0)) {
+			            count++;
+			        }
+			    }
+
+			    if(minVal <= count && count <= maxVal) {
+			        return true;
+			    }
+			    return false;
+			 }).count();
+		} catch (IOException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		String str = "5-11 x: lgqsgxxpzprx";
+		System.out.println(str.split(":")[1].substring(1));
+		System.out.println(l);
 	}
 }
