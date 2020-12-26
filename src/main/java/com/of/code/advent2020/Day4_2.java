@@ -18,17 +18,11 @@ public class Day4_2 {
         try {
             path = Paths.get(Day4_2.class.getResource("/day4.txt").toURI());
             String[] strArray = Files.readString(path).split("\r\n\r\n");
-            long l = Arrays.stream(strArray).map(item -> {
-
-                Map<String, String> map = Arrays.stream(item.split("\r\n"))
-                        .flatMap(strs -> Arrays.stream(strs.split(" "))).map(str -> str.split(":"))
-                        .collect(Collectors.toMap(array -> array[0], array -> array[1], (o1, o2) -> o2));
-
-                return map;
-
-            }).
-                    filter(item -> Day4_1.validPassport(item.keySet().stream().collect(Collectors.toSet()))).
-                    filter(item -> item.entrySet().stream().allMatch(map -> checkValidValue(map.getKey(), map.getValue()))).
+            long l = Arrays.
+                    stream(strArray).
+                    map(Day4_2::getStringStringMap).
+                    filter(Day4_2::checkValidPassport).
+                    filter(Day4_2::checkAllMatch).
                     count();
             System.out.println(l);
         } catch (IOException | URISyntaxException e1) {
@@ -36,6 +30,20 @@ public class Day4_2 {
             e1.printStackTrace();
         }
 
+    }
+
+    private static boolean checkAllMatch(Map<String, String> item) {
+        return item.entrySet().stream().allMatch(map -> checkValidValue(map.getKey(), map.getValue()));
+    }
+
+    private static boolean checkValidPassport(Map<String, String> item) {
+        return Day4_1.validPassport(item.keySet().stream().collect(Collectors.toSet()));
+    }
+
+    private static Map<String, String> getStringStringMap(String item) {
+        return Arrays.stream(item.split("\r\n"))
+                .flatMap(strs -> Arrays.stream(strs.split(" "))).map(str -> str.split(":"))
+                .collect(Collectors.toMap(array -> array[0], array -> array[1], (o1, o2) -> o2));
     }
 
     private static boolean checkInRange(String value, int begin, int end) {
