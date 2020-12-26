@@ -22,7 +22,7 @@ public class Day4_2 {
 
 				Map<String, String> map = Arrays.stream(item.split("\r\n"))
 						.flatMap(strs -> Arrays.stream(strs.split(" "))).map(str -> str.split(":"))
-						.collect(Collectors.toMap(array -> array[0], array -> array[1]));
+						.collect(Collectors.toMap(array -> array[0], array -> array[1], (o1, o2) -> o2));
 
 				return map;
 
