@@ -53,14 +53,11 @@ public class Day9 {
 	}
 
 	public static long part2(Long[] nums, Long target) {
-		List<Integer> result = new ArrayList<>();
 		for (int i = 0; i < nums.length; i++) {
 			Long sum = 0L;
 			for (int j = i; j < nums.length; j++) {
 				sum += nums[j];
 				if (sum.equals(target)) {
-					result.add(i);
-					result.add(j);
 					LongStream longStream = LongStream.range(i, j).map(x -> nums[(int) x]); 
 					LongStream longStreamDup = LongStream.range(i, j).map(x -> nums[(int) x]);
 					return longStream.max().orElse(0L) + longStreamDup.min().orElse(0L) ;
