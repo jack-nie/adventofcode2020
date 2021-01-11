@@ -67,7 +67,7 @@ public class Day9 {
 				}
 			}
 		}
-		return -1;
+		return -1L;
 	}
 
 	public static boolean checkValid(Long[] nums, int begin, int end, Long target) {
