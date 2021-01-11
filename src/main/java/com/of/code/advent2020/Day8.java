@@ -16,31 +16,30 @@ public class Day8 {
         try {
             URI uri = Day8.class.getResource("/day8.txt").toURI();
             Stream<String> lines = Files.lines(Path.of(uri));
-//            int i = part1(lines);
-//            System.out.println(i);
-            int j = part2(lines);
+            List<Instruction> instructions = convertToInstructions(lines);
+            int i = part1(instructions);
+            System.out.println(i);
+            int j = part2(instructions);
             System.out.println(j);
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    static int part2(Stream<String> lines) {
-        List<Instruction> instructions = convertToInstructions(lines);
+    static int part2(List<Instruction> instructions) {
         return correctInstruction(instructions);
     }
     
-    static int part1(Stream<String> lines) {
-        List<Instruction> instructions = convertToInstructions(lines);
+    
+    static int part1(List<Instruction> instructions) {
         return calculateAcc(instructions).getResult();
     }
 
     private static int correctInstruction(List<Instruction> instructions) {
- 
-  
+    	Result result = new Result(-1, false);
     	for (int i = 0; i < instructions.size(); i++) {
     		Instruction item = instructions.get(i);
-    		Result result = new Result(0, false);
+    		
     		switch (item.getOperation()) {
 				case nop:
 					item.setOperation(Operation.jmp);
@@ -63,9 +62,10 @@ public class Day8 {
 		    }
     	
     	}
-    	return -1;
+    	return result.getResult();
     	
     }
+    
     private static Result calculateAcc(List<Instruction> instructions) {
         int result = 0;
         int index = 0;
