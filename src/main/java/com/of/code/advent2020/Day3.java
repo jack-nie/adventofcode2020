@@ -22,8 +22,7 @@ public class Day3 {
 
 			System.out.println("Part II: " + solution);
 
-		} catch (IOException | URISyntaxException e1) {
-			// TODO Auto-generated catch block
+		} catch (IOException | URISyntaxException e1) {			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 

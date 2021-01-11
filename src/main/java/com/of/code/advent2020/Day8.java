@@ -16,19 +16,57 @@ public class Day8 {
         try {
             URI uri = Day8.class.getResource("/day8.txt").toURI();
             Stream<String> lines = Files.lines(Path.of(uri));
-            int i = part1(lines);
-            System.out.println(i);
+//            int i = part1(lines);
+//            System.out.println(i);
+            int j = part2(lines);
+            System.out.println(j);
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
 
+    static int part2(Stream<String> lines) {
+        List<Instruction> instructions = convertToInstructions(lines);
+        return correctInstruction(instructions);
+    }
+    
     static int part1(Stream<String> lines) {
         List<Instruction> instructions = convertToInstructions(lines);
-        return calculateAcc(instructions);
+        return calculateAcc(instructions).getResult();
     }
 
-    private static int calculateAcc(List<Instruction> instructions) {
+    private static int correctInstruction(List<Instruction> instructions) {
+ 
+  
+    	for (int i = 0; i < instructions.size(); i++) {
+    		Instruction item = instructions.get(i);
+    		Result result = new Result(0, false);
+    		switch (item.getOperation()) {
+				case nop:
+					item.setOperation(Operation.jmp);
+					result = calculateAcc(instructions);
+		    		if (!result.getFlag()) {
+		    			return result.getResult();
+		    		}
+		    		item.setOperation(Operation.nop);
+		        	break;
+		        case jmp:
+		        	item.setOperation(Operation.nop);
+		        	result = calculateAcc(instructions);
+		    		if (!result.getFlag()) {
+		    			return result.getResult();
+		    		}
+		    		item.setOperation(Operation.jmp);
+		        	break;
+		        case acc:
+		        	break;	
+		    }
+    	
+    	}
+    	return -1;
+    	
+    }
+    private static Result calculateAcc(List<Instruction> instructions) {
         int result = 0;
         int index = 0;
         Set<Instruction> visitedSet = new HashSet<>();
@@ -36,7 +74,7 @@ public class Day8 {
         while (index < instructions.size()) {
             Instruction instruction = instructions.get(index);
             if (visitedSet.contains(instruction)) {
-                return result;
+                return new Result(result, true);
             }
 
             visitedSet.add(instruction);
@@ -55,7 +93,7 @@ public class Day8 {
                     break;
             }
         }
-        return result;
+        return new Result(result, false);
     }
 
     private static List<Instruction> convertToInstructions(Stream<String> lines) {
@@ -72,8 +110,8 @@ public class Day8 {
     }
 
     static class Instruction {
-        private final Operation operation;
-        private final int argument;
+        private  Operation operation;
+        private  int argument;
 
         public Instruction(Operation operation, int argument) {
             this.operation = operation;
@@ -83,9 +121,35 @@ public class Day8 {
         public Operation getOperation() {
             return operation;
         }
+        
+        public void setOperation(Operation operation) {
+        	this.operation = operation;
+        }
 
         public int getArgument() {
             return argument;
         }
+        
+        public void setArgument(int argument) {
+        	this.argument = argument;
+        }
+    }
+    
+    static class Result {
+    	private final int result;
+    	private final boolean flag;
+    	
+    	public Result(int result, boolean flag) {
+    		this.result = result;
+    		this.flag = flag;
+    	}
+    	
+    	public int getResult() {
+    		return result;
+    	}
+    	
+    	public boolean getFlag() {
+    		return flag;
+    	}
     }
 }
