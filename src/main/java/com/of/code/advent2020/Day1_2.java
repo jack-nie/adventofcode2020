@@ -20,7 +20,8 @@ public class Day1_2 {
 		System.out.println(result);
 	}
 
-	public static void sumThreeNum(List<List<Integer>> result, List<Integer> nums, List<Integer> list, int target, int index) {
+	public static void sumThreeNum(List<List<Integer>> result, List<Integer> nums, List<Integer> list, int target,
+			int index) {
 
 		if (list.size() == 3) {
 			if (target == 0) {
