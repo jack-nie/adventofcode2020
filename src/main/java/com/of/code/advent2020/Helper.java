@@ -38,5 +38,9 @@ public class Helper {
 		}
 		return list;
 	}
+	
+	public static char[][] parseGrid(List<String> list) {
+		return list.stream().map(String::toCharArray).toArray(char[][]::new);
+	}
 
 }
