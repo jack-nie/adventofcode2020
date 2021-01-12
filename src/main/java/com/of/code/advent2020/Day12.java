@@ -9,6 +9,9 @@ public class Day12 {
 		List<String> list = Helper.generateStringArrayFromFile("/day12.txt");
 		int part1 = part1(list);
 		System.out.println(part1);
+
+		int part2 = part2(list);
+		System.out.println(part2);
 	}
 
 	public static int part1(List<String> list) {
@@ -66,6 +69,43 @@ public class Day12 {
 		return point;
 	}
 
+	public static int part2(List<String> list) {
+		List<Move> moves = list.stream().map(item -> new Move(Direction.valueOf(String.valueOf(item.charAt(0))),
+				Integer.parseInt(item.substring(1)))).collect(Collectors.toList());
+		Point point = new Point(0, 0, Direction.E);
+		Point point2 = new Point(10, 1, Direction.E);
+		for (int i = 0; i < moves.size(); i++) {
+			Move move = moves.get(i);
+			switch (move.direction) {
+			case N:
+				point2.setY(point2.getY() + move.getDistance());
+				break;
+			case S:
+				point2.setY(point2.getY() - move.getDistance());
+				break;
+			case W:
+				point2.setX(point2.getX() - move.getDistance());
+				break;
+			case E:
+				point2.setX(point2.getX() + move.getDistance());
+				break;
+			case F:
+				point.setY(point.getY() + point2.getY() * move.getDistance());
+				point.setX(point.getX() + point2.getX() * move.getDistance());
+				break;
+			case L:
+				point2 = calcDirectionPart2(point2, Direction.L, move.getDistance());
+				break;
+			case R:
+				point2 = calcDirectionPart2(point2, Direction.R, move.getDistance());
+				break;
+
+			}
+		}
+
+		return Math.abs(point.getX()) + Math.abs(point.getY());
+	}
+
 	private static Direction calcDirection(Direction oldDirection, Direction newDirection, int degree) {
 		int step = 0;
 		switch (newDirection) {
@@ -82,6 +122,46 @@ public class Day12 {
 		List<Direction> directions = Arrays.asList(Direction.E, Direction.S, Direction.W, Direction.N);
 		int index = directions.indexOf(oldDirection);
 		return directions.get((index + step) % 4);
+	}
+
+	private static Point calcDirectionPart2(Point point, Direction newDirection, int degree) {
+		int step = 0;
+		switch (newDirection) {
+		case L:
+			step = (360 - degree) / 90 & 4;
+			break;
+		case R:
+			step = degree / 90 % 4;
+			break;
+		default:
+			break;
+		}
+
+		int x = 0;
+		int y = 0;
+		switch (step) {
+		case 0:
+			break;
+		case 1:
+			x = point.getX() * -1;
+			y = point.getY();
+			point.setX(y);
+			point.setY(x);
+			break;
+		case 2:
+			x = point.getX() * -1;
+			y = point.getY() * -1;
+			point.setY(y);
+			point.setX(x);
+			break;
+		case 3:
+			y = point.getY() * -1;
+			x = point.getX();
+			point.setY(x);
+			point.setX(y);
+			break;
+		}
+		return point;
 	}
 
 	enum Direction {
