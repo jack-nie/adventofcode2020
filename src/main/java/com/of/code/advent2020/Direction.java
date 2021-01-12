@@ -16,22 +16,6 @@ public enum Direction {
 		this.code = code;
 	}
 
-	public static Direction getByDirCode(char code) {
-		return Arrays.stream(values()).filter(e -> e.code == code).findAny().get();
-	}
-
-	public static Direction getByDir(char code) {
-		return Arrays.stream(values()).filter(e -> e.name().charAt(0) == code).findAny().get();
-	}
-
-	public Direction turn(boolean right) {
-		int cur = ordinal() + (right ? 1 : -1);
-		if (cur == fourDirections().length)
-			cur = 0;
-		else if (cur == -1)
-			cur = 3;
-		return fourDirections()[cur];
-	}
 
 	public Point move(Point currentLocation, int amount) {
 		switch (this) {
@@ -70,79 +54,4 @@ public enum Direction {
 		return move(p, 1);
 	}
 
-	public Direction opposite() {
-		switch (this) {
-		case NORTH:
-			return SOUTH;
-		case SOUTH:
-			return NORTH;
-		case EAST:
-			return WEST;
-		case WEST:
-			return EAST;
-		case NORTHEAST:
-			return SOUTHWEST;
-		case SOUTHWEST:
-			return NORTHEAST;
-		case EASTSOUTH:
-			return WESTNORTH;
-		case WESTNORTH:
-			return EASTSOUTH;
-		}
-		throw new IllegalStateException("Non-existent Direction: " + this);
-	}
-
-	public static Direction getByMove(Point from, Point to) {
-		if (to.getX() > from.getX())
-			return EAST;
-		else if (to.getX() < from.getX())
-			return WEST;
-		else if (to.getY() > from.getY())
-			return SOUTH;
-		else if (to.getY() < from.getY())
-			return NORTH;
-		throw new IllegalStateException("From and to location are the same: " + from + ", " + to);
-	}
-
-	public boolean leftOf(Direction robotDir) {
-		int n = this.ordinal() - 1;
-		if (n == -1)
-			n = values().length - 1;
-		return robotDir.ordinal() == n;
-	}
-
-	public Direction turnDegrees(int degrees, boolean right) {
-		int num = degrees % 360;
-		Direction dir = this;
-		while (num > 0) {
-			dir = turn(right);
-			num -= 90;
-		}
-		return dir;
-	}
-
-	public Direction turnDegrees(int degrees) {
-		return turnDegrees(abs(degrees), degrees > 0);
-	}
-
-	public static Point turn(Point w, boolean b) {
-		return b ? new Point(-w.getY(), w.getX()) : new Point(w.getY(), -w.getX());
-	}
-
-	public static Point turnDegrees(Point w, int distance, boolean b) {
-		int num = distance % 360;
-		while (num > 0) {
-			w = turn(w, b);
-			num -= 90;
-		}
-		return w;
-	}
-
-	public static Point turnDegrees(Point w, int distance) {
-		return turnDegrees(w, abs(distance), distance > 0);
-	}
-
-	public static Direction[] fourDirections() {
-		return new Direction[] { NORTH, EAST, SOUTH, WEST };
-	}
 }
